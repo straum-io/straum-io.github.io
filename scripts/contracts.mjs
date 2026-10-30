@@ -12,7 +12,7 @@
 //
 // The pin moves only in a site PR (ECO-D-14 A): change PIN to a merged
 // straum main commit, run `npm run check`, commit the regenerated pages.
-import { writeFileSync } from 'node:fs';
+import { readdirSync, writeFileSync } from 'node:fs';
 import { posix } from 'node:path';
 
 const PIN = 'ed502c59d2427b1f97a7391f00a2a81d549dc8de';
@@ -36,20 +36,28 @@ function render(path, text, pin) {
 	const title = lines[h1].slice(2).trim();
 	const body = [...lines.slice(0, h1), ...lines.slice(h1 + 1)].join('\n').replace(/^\n+/, '');
 	const dir = posix.dirname(path);
-	const linked = body.replace(/\]\(([^)\s]+)\)/g, (whole, target) => {
-		if (/^([a-z]+:|#)/i.test(target)) return whole;
-		const [file, anchor] = target.split('#');
-		const resolved = posix.normalize(posix.join(dir, file));
-		const hash = anchor === undefined ? '' : `#${anchor}`;
-		if (SOURCES[resolved]) return `](../${SOURCES[resolved]}/${hash})`;
-		return `](https://github.com/${REPO}/blob/${pin}/${resolved}${hash})`;
-	});
+	// Links are rewritten outside fenced code only, so code text stays as written.
+	let fenced = false;
+	const linked = body.split('\n').map((line) => {
+		if (line.startsWith('```')) fenced = !fenced;
+		return fenced || line.startsWith('```') ? line : rewrite(line);
+	}).join('\n');
+	function rewrite(line) {
+		return line.replace(/\]\(([^)\s]+)\)/g, (whole, target) => {
+			if (/^([a-z]+:|#)/i.test(target)) return whole;
+			const [file, anchor] = target.split('#');
+			const resolved = posix.normalize(posix.join(dir, file));
+			const hash = anchor === undefined ? '' : `#${anchor}`;
+			if (SOURCES[resolved]) return `](../${SOURCES[resolved]}/${hash})`;
+			return `](https://github.com/${REPO}/blob/${pin}/${resolved}${hash})`;
+		});
+	}
 	return [
 		'---',
 		`title: ${JSON.stringify(title)}`,
 		'---',
 		'',
-		`Generated from [\`${path}\`](https://github.com/${REPO}/blob/${pin}/${path}) at straum commit \`${pin.slice(0, 7)}\`. The file in straum is the source of truth; change it there.`,
+		`Generated from [\`${path}\`](https://github.com/${REPO}/blob/${pin}/${path}) at straum commit \`${pin.slice(0, 7)}\`. The file in straum is the source of truth; change it there. Straum is experimental and not for production.`,
 		'',
 		linked,
 	].join('\n');
@@ -73,8 +81,11 @@ if (process.argv.includes('--ahead')) {
 	process.exit(0);
 }
 
+const REFERENCE = new URL('../src/content/docs/reference/', import.meta.url);
+const extra = readdirSync(REFERENCE).filter((f) => !Object.values(SOURCES).some((slug) => f === `${slug}.md`));
+if (extra.length) throw new Error(`src/content/docs/reference/ holds pages not generated from straum: ${extra.join(', ')}`);
 for (const [path, slug] of Object.entries(SOURCES)) {
-	const page = new URL(`../src/content/docs/reference/${slug}.md`, import.meta.url);
+	const page = new URL(`${slug}.md`, REFERENCE);
 	writeFileSync(page, render(path, await raw(PIN, path), PIN));
 }
 console.log(`reference pages rendered from straum ${PIN.slice(0, 7)}`);

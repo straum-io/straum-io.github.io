@@ -43,7 +43,7 @@ jobs:
       # Non-blocking (ECO-D-23): names the reference sources that differ on
       # straum main; the pin moves only in a site PR (ECO-D-14 A).
       - name: Warn when straum main is ahead of the pin
-        if: steps.src.outputs.site == 'true'
+        if: always() && steps.src.outputs.site == 'true'
         continue-on-error: true
         run: node scripts/contracts.mjs --ahead
       - uses: actions/upload-pages-artifact@v5

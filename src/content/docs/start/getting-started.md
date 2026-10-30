@@ -29,7 +29,7 @@ directly with the same flags. The broker refuses a `--listen` address that
 is not loopback. The data directory keeps the cluster id and node id of its
 first start and refuses others. Ctrl-C stops the broker after it commits
 the requests it has queued. Every setting is in the
-[broker's README](https://github.com/straum-io/straum/blob/main/crates/straum-broker/README.md).
+[broker's README](https://github.com/straum-io/straum/blob/ed502c59d2427b1f97a7391f00a2a81d549dc8de/crates/straum-broker/README.md).
 
 ## Produce and consume with straum-cli
 
@@ -71,7 +71,7 @@ existing topic exits 4 (refused by the broker), and a `produce` whose
 answer was lost exits 5: the messages may or may not be stored, and
 sending them again may store them twice, because version 0 has no
 idempotent produce. The codes, commands and JSON output are in the
-[straum-cli README](https://github.com/straum-io/straum-cli#readme).
+[straum-cli README](https://github.com/straum-io/straum-cli/tree/v0.1.0#readme).
 
 ## Produce and consume with the Go SDK
 
@@ -152,7 +152,7 @@ The iterator keeps its position in memory; a program that resumes later
 stores `it.Position()` itself and passes it as the starting seq. The
 packages are `client`, `producer`, `consumer`, `admin` and `straumerr`; their
 documentation and examples are in the
-[straum-go-sdk repository](https://github.com/straum-io/straum-go-sdk).
+[straum-go-sdk repository](https://github.com/straum-io/straum-go-sdk/tree/v0.1.0).
 
 ## Next
 

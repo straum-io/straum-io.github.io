@@ -2,7 +2,7 @@
 title: "Straum protocol, version 0"
 ---
 
-Generated from [`docs/protocol.md`](https://github.com/straum-io/straum/blob/ed502c59d2427b1f97a7391f00a2a81d549dc8de/docs/protocol.md) at straum commit `ed502c5`. The file in straum is the source of truth; change it there.
+Generated from [`docs/protocol.md`](https://github.com/straum-io/straum/blob/ed502c59d2427b1f97a7391f00a2a81d549dc8de/docs/protocol.md) at straum commit `ed502c5`. The file in straum is the source of truth; change it there. Straum is experimental and not for production.
 
 The binary protocol between Straum clients and a Straum broker, over TCP.
 Version 0 is served by a single-node broker (`crates/straum-broker`); its

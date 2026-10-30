@@ -2,7 +2,7 @@
 title: "Guarantees of Straum version 0"
 ---
 
-Generated from [`docs/guarantees.md`](https://github.com/straum-io/straum/blob/ed502c59d2427b1f97a7391f00a2a81d549dc8de/docs/guarantees.md) at straum commit `ed502c5`. The file in straum is the source of truth; change it there.
+Generated from [`docs/guarantees.md`](https://github.com/straum-io/straum/blob/ed502c59d2427b1f97a7391f00a2a81d549dc8de/docs/guarantees.md) at straum commit `ed502c5`. The file in straum is the source of truth; change it there. Straum is experimental and not for production.
 
 What the broker in this repository promises today: one node, protocol
 version 0 ([protocol.md](../protocol/)), the straum-store engine with WAL
