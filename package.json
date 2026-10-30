@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "check": "npm run build",
+    "build": "node scripts/contracts.mjs && astro build",
+    "check": "npm run build && node scripts/check-links.mjs",
     "preview": "astro preview"
   },
   "dependencies": {

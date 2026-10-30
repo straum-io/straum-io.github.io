@@ -1,7 +1,8 @@
 name: site
 
-# Every PR and push: check the contract pages against straum, build, check
-# links. A push to main also deploys to GitHub Pages (ECO-D-13).
+# Every PR and push: render the reference pages from straum at the pin
+# (scripts/contracts.mjs), build, check links, fail if the committed pages
+# differ from the rendered ones. A push to main also deploys to GitHub Pages (ECO-D-13).
 # While the repository holds no src/, the build steps are skipped, nothing
 # is deployed, and GitHub Pages keeps serving its last deployment. The
 # content is under the tag archive/main-2026-10-23.
@@ -36,9 +37,15 @@ jobs:
         if: steps.src.outputs.site == 'true'
       - run: npm run check
         if: steps.src.outputs.site == 'true'
-      - name: The committed contract pages match the generated ones
+      - name: The committed reference pages match the ones generated at the pin
         if: steps.src.outputs.site == 'true'
-        run: git diff --exit-code -- src/content/docs
+        run: git diff --exit-code -- src/content/docs && test -z "$(git status --porcelain -- src/content/docs)"
+      # Non-blocking (ECO-D-23): names the reference sources that differ on
+      # straum main; the pin moves only in a site PR (ECO-D-14 A).
+      - name: Warn when straum main is ahead of the pin
+        if: steps.src.outputs.site == 'true'
+        continue-on-error: true
+        run: node scripts/contracts.mjs --ahead
       - uses: actions/upload-pages-artifact@v5
         if: steps.src.outputs.site == 'true' && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
