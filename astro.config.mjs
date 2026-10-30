@@ -1,9 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import starlight from '@astrojs/starlight';
 
 // GitHub Pages at the account root (ECO-D-13, amended). Sitemap and canonical URLs use it.
-// While the site is rebuilt it is one page (src/pages/index.astro); the
-// Starlight setup is under the tag archive/main-2026-10-23.
 export default defineConfig({
 	site: 'https://straum-io.github.io',
+	integrations: [
+		starlight({
+			title: 'Straum',
+			description: 'Straum is a durable event log for one server, experimental, version 0.',
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/straum-io/straum' }],
+			sidebar: [
+				{ label: 'Start here', items: [{ autogenerate: { directory: 'start' } }] },
+				// Generated from straum at a pinned commit by scripts/contracts.mjs.
+				{ label: 'Reference', items: [{ autogenerate: { directory: 'reference' } }] },
+			],
+		}),
+	],
 });
