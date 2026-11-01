@@ -10,8 +10,8 @@ rebuilt together with Straum itself.
   generated from straum. Do not edit them; change the file in straum.
 - `scripts/contracts.mjs`: renders the reference pages; `check-links.mjs`:
   every same-site link resolves.
-- `.github/`: the build and GitHub Pages deploy (`site.yml`), the paused
-  daily drift Issue (`core-drift.yml`), the PR body check
+- `.github/`: the build and GitHub Pages deploy (`site.yml`), the daily
+  drift Issue (`core-drift.yml`, `scripts/core-drift.sh`), the PR body check
   (`pr-contract.yml`), the Issue and PR templates.
 
 ```bash
@@ -31,7 +31,8 @@ fails if `reference/` holds a page it does not generate.
 
 CI fails when the committed pages differ from the ones rendered at the
 pin. When straum `main` has changed one of the source files since the pin,
-CI warns and names the file, without failing.
+CI warns and names the file, without failing, and a daily workflow keeps one
+open `core-drift` Issue naming the files until the pin catches up.
 
 To follow straum, in a PR on this repository:
 
